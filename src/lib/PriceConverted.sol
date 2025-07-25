@@ -5,11 +5,9 @@ import {AggregatorV3Interface} from "@chainlink.git/contracts/src/v0.8/shared/in
 
 library PriceConverted {
     function getPrice() internal view returns (int256) {
-        AggregatorV3Interface dataFeed = AggregatorV3Interface(
-            0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43
-        );
-        (, int256 answer, , , ) = dataFeed.latestRoundData();
-        require(answer > 0 , "Invalid Price");
+        AggregatorV3Interface dataFeed = AggregatorV3Interface(0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43);
+        (, int256 answer,,,) = dataFeed.latestRoundData();
+        require(answer > 0, "Invalid Price");
         //Nhận về 8 digit, nhân thêm 10 chữ số thành 18 -> wei
         return answer * 1e10;
     }

@@ -13,6 +13,9 @@ contract CrowdFunding {
 
     address[] public funders;
 
+    event Funded(address indexed funder, uint256 amount);
+    event Withdrawn (uint256 amount);
+
     constructor() payable {
         i_owner = payable(msg.sender);
     }
@@ -41,11 +44,13 @@ contract CrowdFunding {
             funders.push(msg.sender);
             isFunder[msg.sender] = true;
         }
+        emit Funded(msg.sender, msg.value);
     }
 
     function withdraw() public onlyOwner {
         (bool success,) = i_owner.call{value: address(this).balance}("");
         require(success, "Withdraw failed");
+        emit Withdrawn(address(this).balance);
     }
 
     function getFunderLength() public view returns (uint256) {

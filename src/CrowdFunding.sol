@@ -8,6 +8,7 @@ contract CrowdFunding {
 
     uint256 public constant MINIMUM_USD = 5e18; //5 USD in Wei
     address public immutable i_owner;
+    address public immutable i_priceFeed;
     mapping(address funder => bool isFunded) public isFunder;
     mapping(address funder => uint256 fundedAmount) public addressToAmountFunded;
 
@@ -16,8 +17,9 @@ contract CrowdFunding {
     event Funded(address indexed funder, uint256 amount);
     event Withdrawn (uint256 amount);
 
-    constructor() payable {
+    constructor(address priceFeed) payable {
         i_owner = payable(msg.sender);
+        i_priceFeed = priceFeed;    
     }
 
     fallback() external payable {
@@ -37,8 +39,8 @@ contract CrowdFunding {
     }
 
     function fund() public payable {
-        //uint256 valueInUSD = msg.value.getPriceInUSD();
-        //require(valueInUSD >= MINIMUM_USD, "You need to fund at least 5 USD");
+        uint256 valueInUSD = msg.value.getPriceInUSD(i_priceFeed);
+        require(valueInUSD >= MINIMUM_USD, "You need to fund at least 5 USD");
         addressToAmountFunded[msg.sender] += msg.value;
         if (!isFunder[msg.sender]) {
             funders.push(msg.sender);

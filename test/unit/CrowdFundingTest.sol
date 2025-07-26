@@ -12,8 +12,12 @@ contract CrowdFundingTest is Test {
     CrowdFunding public crowdFunding;
 
     function setUp() public {
-        crowdFunding = new CrowdFunding();
+        crowdFunding = new CrowdFunding(address(0)); 
         vm.deal(USER, USER_BALANCE);
+    }
+
+    function testInputFund() public {
+        
     }
 
     function testFund() public {
